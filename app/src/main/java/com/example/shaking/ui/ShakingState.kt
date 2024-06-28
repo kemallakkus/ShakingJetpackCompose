@@ -20,41 +20,29 @@ class ShakingState(
         val shakeAnimationSpec: AnimationSpec<Float> = tween(animationDuration)
 
         when (direction) {
-            Directions.LEFT -> shakeToLeft(shakeAnimationSpec)
-            Directions.RIGHT -> shakeToRight(shakeAnimationSpec)
-            Directions.LEFT_THEN_RIGHT -> shakeToLeftThenRight(shakeAnimationSpec)
-            Directions.RIGHT_THEN_LEFT -> shakeToRightThenLeft(shakeAnimationSpec)
+            Directions.LEFT -> performShake(shakeAnimationSpec, -strength.value)
+            Directions.RIGHT -> performShake(shakeAnimationSpec, strength.value)
+            Directions.LEFT_THEN_RIGHT -> performShakeSequence(shakeAnimationSpec, -strength.value, strength.value / 2)
+            Directions.RIGHT_THEN_LEFT -> performShakeSequence(shakeAnimationSpec, strength.value, -strength.value / 2)
         }
     }
 
-    private suspend fun shakeToRightThenLeft(shakeAnimationSpec: AnimationSpec<Float>) {
+    private suspend fun performShake(shakeAnimationSpec: AnimationSpec<Float>, targetValue: Float) {
         repeat(3) {
-            xPosition.animateTo(strength.value, shakeAnimationSpec)
-            xPosition.animateTo(0f, shakeAnimationSpec)
-            xPosition.animateTo(-strength.value / 2, shakeAnimationSpec)
-            xPosition.animateTo(0f, shakeAnimationSpec)
-        }
-    }
-
-    private suspend fun shakeToLeftThenRight(shakeAnimationSpec: AnimationSpec<Float>) {
-        repeat(3) {
-            xPosition.animateTo(-strength.value, shakeAnimationSpec)
-            xPosition.animateTo(0f, shakeAnimationSpec)
-            xPosition.animateTo(strength.value / 2, shakeAnimationSpec)
+            xPosition.animateTo(targetValue, shakeAnimationSpec)
             xPosition.animateTo(0f, shakeAnimationSpec)
         }
     }
 
-    private suspend fun shakeToRight(shakeAnimationSpec: AnimationSpec<Float>) {
+    private suspend fun performShakeSequence(
+        shakeAnimationSpec: AnimationSpec<Float>,
+        firstTargetValue: Float,
+        secondTargetValue: Float,
+    ) {
         repeat(3) {
-            xPosition.animateTo(strength.value, shakeAnimationSpec)
+            xPosition.animateTo(firstTargetValue, shakeAnimationSpec)
             xPosition.animateTo(0f, shakeAnimationSpec)
-        }
-    }
-
-    private suspend fun shakeToLeft(shakeAnimationSpec: AnimationSpec<Float>) {
-        repeat(3) {
-            xPosition.animateTo(-strength.value, shakeAnimationSpec)
+            xPosition.animateTo(secondTargetValue, shakeAnimationSpec)
             xPosition.animateTo(0f, shakeAnimationSpec)
         }
     }
@@ -62,7 +50,7 @@ class ShakingState(
     sealed class Strength(val value: Float) {
         data object Normal : Strength(17f)
         data object Strong : Strength(40f)
-        data class Custom(val strength: Float) : Strength(strength)
+        data class Custom(val customValue: Float) : Strength(customValue)
     }
 
     enum class Directions {
@@ -73,7 +61,7 @@ class ShakingState(
 @Composable
 fun rememberShakingState(
     strength: ShakingState.Strength = ShakingState.Strength.Normal,
-    direction: ShakingState.Directions = ShakingState.Directions.LEFT
+    direction: ShakingState.Directions = ShakingState.Directions.LEFT,
 ): ShakingState {
     return remember { ShakingState(strength, direction) }
 }
