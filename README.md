@@ -42,15 +42,15 @@ val shakingState = rememberShakingState(
 
 
 ### Strength Options:
-`ShakingState.Strength.Normal:` Default strength (17f)
-`ShakingState.Strength.Strong:` Stronger shake (40f)
-`ShakingState.Strength.Custom(value):` Custom strength, where value is a float.
+- `ShakingState.Strength.Normal:` Default strength (17f)
+- `ShakingState.Strength.Strong:` Stronger shake (40f)
+- `ShakingState.Strength.Custom(value):` Custom strength, where value is a float.
 
 ### Direction Options:
-`ShakingState.Directions.LEFT:` Shake to the left
-`ShakingState.Directions.RIGHT:` Shake to the right
-`ShakingState.Directions.LEFT_THEN_RIGHT:` Shake left then right
-`ShakingState.Directions.RIGHT_THEN_LEFT:` Shake right then left
+- `ShakingState.Directions.LEFT:` Shake to the left
+- `ShakingState.Directions.RIGHT:` Shake to the right
+- `ShakingState.Directions.LEFT_THEN_RIGHT:` Shake left then right
+- `ShakingState.Directions.RIGHT_THEN_LEFT:` Shake right then left
 
 ## Example
 
